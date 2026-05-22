@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ujian Online Pemrograman Web</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        /* Printable Certificate Layout Override */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #certificate-print-area, #certificate-print-area * {
+                visibility: visible;
+            }
+            #certificate-print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 antialiased">
+
+    <!-- Header / Navbar -->
+    <header class="bg-indigo-700 text-white shadow-lg sticky top-0 z-40 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-indigo-600 rounded-lg shadow-inner">
+                    <i class="fas fa-laptop-code text-2xl text-indigo-200"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">E-Exam Web Programming</h1>
+                    <p class="text-xs text-indigo-200">Sistem Evaluasi Akademik Online</p>
+                </div>
+            </div>
+            <!-- Dynamic header widget -->
+            <div id="header-widget" class="hidden sm:flex items-center gap-4 text-sm bg-indigo-800 px-4 py-2 rounded-lg border border-indigo-600">
+                <div class="flex items-center gap-2">
+                    <i class="far fa-user text-indigo-300"></i>
+                    <span id="widget-nama" class="font-medium text-white">-</span>
+                </div>
+                <div class="h-4 w-px bg-indigo-500"></div>
+                <div class="flex items-center gap-2">
+                    <i class="far fa-id-card text-indigo-300"></i>
+                    <span id="widget-nim" class="font-mono text-white">-</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8">
+        
+        <!-- SCREEN 1: Registration Form -->
+        <section id="screen-reg" class="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8 border border-slate-100 transition-all duration-300 transform hover:scale-[1.01]">
+            <div class="text-center mb-8">
+                <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">Pendaftaran</span>
+                <h2 class="text-2xl font-extrabold text-slate-900">Identitas Peserta Ujian</h2>
+                <p class="text-slate-500 text-sm mt-1">Lengkapi data diri Anda dengan benar sebelum memulai ujian pemrograman web.</p>
+            </div>
+
+            <form id="form-registration" onsubmit="handleRegistration(event)" class="space-y-5">
+                <div>
+                    <label for="reg-nama" class="block text-sm font-semibold text-slate-700 mb-1">Nama Lengkap <span class="text-red-500">*</span></label>
+                    <div class="relative rounded-md shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                            <i class="fas fa-user-tag"></i>
+                        </div>
+                        <input type="text" id="reg-nama" required 
+                            class="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-sm" 
+                            placeholder="Contoh: Muhammad Budi">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="reg-nim" class="block text-sm font-semibold text-slate-700 mb-1">NIM / No. Induk <span class="text-red-500">*</span></label>
+                        <div class="relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                <i class="fas fa-id-badge"></i>
+                            </div>
+                            <input type="text" id="reg-nim" required 
+                                class="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-sm font-mono" 
+                                placeholder="Contoh: 220101034">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="reg-kelas" class="block text-sm font-semibold text-slate-700 mb-1">Kelas <span class="text-red-500">*</span></label>
+                        <div class="relative rounded-md shadow-sm">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <input type="text" id="reg-kelas" required 
+                                class="block w-full pl-10 pr-3 py-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 text-sm" 
+                                placeholder="Contoh: IF-3A / D3-TI">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-lg mb-6 text-xs text-indigo-900 leading-relaxed">
+                        <div class="font-bold flex items-center gap-1.5 mb-1 text-indigo-950">
+                            <i class="fas fa-info-circle"></i> PERATURAN UJIAN
+                        </div>
+                        <ul class="list-disc pl-4 space-y-1">
+                            <li>Ujian terdiri dari <b>15 soal pilihan ganda</b>.</li>
+                            <li>Waktu pengerjaan dibatasi maksimal <b>15 menit</b>.</li>
+                            <li>Skor kelulusan minimal (KKM) adalah <b>70%</b>.</li>
+                            <li>Sertifikat digital akan otomatis diterbitkan apabila Anda lulus.</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" 
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-150 flex items-center justify-center gap-2">
+                        Mulai Ujian Sekarang <i class="fas fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- SCREEN 2: Exam Dashboard -->
+        <section id="screen-exam" class="hidden w-full max-w-6xl grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+            
+            <!-- Left & Center Side: Question and Nav buttons -->
+            <div class="lg:col-span-3 space-y-4">
+                <!-- Info bar: Top status -->
+                <div class="bg-white rounded-xl shadow-md p-4 flex flex-wrap justify-between items-center gap-4 border border-slate-100">
+                    <div class="flex items-center gap-4">
+                        <span class="text-sm font-semibold text-slate-500">Soal Aktif</span>
+                        <div class="flex items-center gap-1.5">
+                            <span id="active-question-badge" class="px-3 py-1 bg-indigo-600 text-white font-bold text-sm rounded-md shadow-sm">1</span>
+                            <span class="text-slate-400">dari</span>
+                            <span id="total-questions-badge" class="font-bold text-slate-700">15</span>
+                        </div>
+                    </div>
+                    <!-- Progress Bar -->
+                    <div class="flex-grow max-w-xs md:max-w-md bg-slate-100 h-2.5 rounded-full overflow-hidden mx-2 hidden sm:block">
+                        <div id="exam-progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <!-- Timer Widget -->
+                    <div class="flex items-center gap-2 text-rose-600 bg-rose-50 px-3.5 py-1.5 rounded-lg border border-rose-200 font-bold text-sm shadow-sm animate-pulse">
+                        <i class="far fa-clock text-lg"></i>
+                        <span id="timer-text" class="font-mono">15:00</span>
+                    </div>
+                </div>
+
+                <!-- Main Question Box -->
+                <div class="bg-white rounded-xl shadow-md border border-slate-100 overflow-hidden">
+                    <div class="p-6 sm:p-8 bg-gradient-to-r from-slate-50 to-indigo-50/10 border-b border-slate-100">
+                        <h3 id="question-text" class="text-lg sm:text-xl font-bold text-slate-900 leading-relaxed">
+                            Loading question...
+                        </h3>
+                    </div>
+                    <!-- Choice List -->
+                    <div id="choices-container" class="p-6 sm:p-8 space-y-3">
+                        <!-- Choice options rendered dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Control Buttons and Nav -->
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-md border border-slate-100">
+                    <div class="flex items-center gap-2 w-full sm:w-auto">
+                        <button id="btn-prev" onclick="navigateQuestion(-1)" 
+                            class="flex-1 sm:flex-initial bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 px-4 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm">
+                            <i class="fas fa-arrow-left"></i> Sebelumnya
+                        </button>
+                        <button id="btn-next" onclick="navigateQuestion(1)" 
+                            class="flex-1 sm:flex-initial bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm">
+                            Berikutnya <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                        <button id="btn-ragu" onclick="toggleRagu()" 
+                            class="flex-1 sm:flex-initial bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm shadow-sm">
+                            <i class="far fa-flag"></i> Ragu-ragu
+                        </button>
+                        <button onclick="confirmSubmitExam()" 
+                            class="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm shadow-sm">
+                            Selesai Ujian <i class="fas fa-check-double"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Question Navigation Sheet -->
+            <div class="bg-white rounded-xl shadow-md p-6 border border-slate-100 space-y-5 lg:sticky lg:top-24">
+                <div>
+                    <h4 class="font-bold text-slate-900 mb-1 flex items-center gap-1.5 text-sm">
+                        <i class="fas fa-th text-indigo-600"></i> Navigasi Soal
+                    </h4>
+                    <p class="text-xs text-slate-500">Klik nomor untuk melompati pertanyaan.</p>
+                </div>
+
+                <!-- Number Grid Container -->
+                <div id="nav-grid-container" class="grid grid-cols-5 gap-2">
+                    <!-- Numbers will be loaded dynamically -->
+                </div>
+
+                <!-- Legend status info -->
+                <div class="border-t border-slate-100 pt-4 space-y-2">
+                    <div class="flex items-center gap-2 text-xs">
+                        <div class="w-4 h-4 rounded bg-indigo-600 text-white flex items-center justify-center text-[10px] font-bold">1</div>
+                        <span class="text-slate-600">Sedang Dikerjakan</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <div class="w-4 h-4 rounded bg-emerald-100 text-emerald-800 border border-emerald-300 text-[10px] font-bold flex items-center justify-center">1</div>
+                        <span class="text-slate-600">Sudah Terjawab</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <div class="w-4 h-4 rounded bg-amber-500 text-white text-[10px] font-bold flex items-center justify-center">1</div>
+                        <span class="text-slate-600">Ragu-ragu</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <div class="w-4 h-4 rounded bg-slate-100 text-slate-600 border border-slate-200 text-[10px] font-bold flex items-center justify-center">1</div>
+                        <span class="text-slate-600">Belum Terjawab</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: Results Dashboard -->
+        <section id="screen-result" class="hidden w-full max-w-4xl space-y-6">
+            
+            <!-- Result Main Card with Score, Info & Actions -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-100 overflow-hidden relative">
+                <!-- Watermark Background -->
+                <div class="absolute -right-16 -bottom-16 opacity-5 pointer-events-none text-indigo-900 text-[12rem] font-bold">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+
+                <div class="text-center mb-8">
+                    <span class="inline-block px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full uppercase tracking-wider mb-2">Hasil Evaluasi</span>
+                    <h2 class="text-2xl font-extrabold text-slate-900">Ringkasan Nilai Anda</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center border-b border-slate-100 pb-8 mb-8">
+                    
+                    <!-- Circular Score Gauge -->
+                    <div class="flex flex-col items-center justify-center bg-slate-50/50 rounded-xl p-6 border border-slate-100">
+                        <div class="relative w-36 h-36 flex items-center justify-center">
+                            <!-- SVG Progress Ring -->
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle cx="72" cy="72" r="62" class="text-slate-200" stroke-width="12" stroke="currentColor" fill="transparent"/>
+                                <circle id="score-ring" cx="72" cy="72" r="62" class="text-indigo-600 transition-all duration-1000" stroke-width="12" stroke-dasharray="389.5" stroke-dashoffset="389.5" stroke-linecap="round" stroke="currentColor" fill="transparent"/>
+                            </svg>
+                            <div class="absolute text-center">
+                                <span id="score-number" class="text-4xl font-extrabold text-slate-900">0</span>
+                                <span class="text-slate-400 block text-[10px] uppercase tracking-wider font-semibold">Skor Akhir</span>
+                            </div>
+                        </div>
+                        <div id="badge-kelulusan" class="mt-4 px-4 py-1.5 rounded-full font-bold text-sm tracking-wide shadow-sm">
+                            Loading...
+                        </div>
+                    </div>
+
+                    <!-- Details Card: Correct, Incorrect, Unanswered -->
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4 text-center">
+                                <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <span class="text-slate-500 text-xs block font-semibold">Jawaban Benar</span>
+                                <span id="stat-benar" class="text-xl font-bold text-emerald-700">0</span>
+                            </div>
+                            
+                            <div class="bg-rose-50 border border-rose-100 rounded-xl p-4 text-center">
+                                <div class="w-8 h-8 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <span class="text-slate-500 text-xs block font-semibold">Jawaban Salah</span>
+                                <span id="stat-salah" class="text-xl font-bold text-rose-700">0</span>
+                            </div>
+
+                            <div class="bg-slate-100 border border-slate-200 rounded-xl p-4 text-center">
+                                <div class="w-8 h-8 bg-slate-200 text-slate-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                                    <i class="fas fa-minus"></i>
+                                </div>
+                                <span class="text-slate-500 text-xs block font-semibold">Lewat / Kosong</span>
+                                <span id="stat-kosong" class="text-xl font-bold text-slate-700">0</span>
+                            </div>
+                        </div>
+
+                        <!-- Data Diri Peserta Panel -->
+                        <div class="bg-slate-50 border border-slate-100 rounded-xl p-4 text-sm space-y-2">
+                            <div class="grid grid-cols-3 border-b border-slate-200/60 pb-1">
+                                <span class="text-slate-500 font-medium">Nama Peserta</span>
+                                <span id="res-nama" class="col-span-2 font-semibold text-slate-900">-</span>
+                            </div>
+                            <div class="grid grid-cols-3 border-b border-slate-200/60 pb-1">
+                                <span class="text-slate-500 font-medium">NIM / No. Induk</span>
+                                <span id="res-nim" class="col-span-2 font-mono text-slate-900">-</span>
+                            </div>
+                            <div class="grid grid-cols-3">
+                                <span class="text-slate-500 font-medium">Kelas / Grup</span>
+                                <span id="res-kelas" class="col-span-2 font-semibold text-slate-900">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Action Buttons inside results dashboard -->
+                <div class="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <button id="btn-print-certificate" onclick="printCertificate()" 
+                        class="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-150 flex items-center justify-center gap-2">
+                        <i class="fas fa-award"></i> Cetak Sertifikat Kelulusan
+                    </button>
+                    <button onclick="restartExam()" 
+                        class="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition duration-150 flex items-center justify-center gap-2">
+                        <i class="fas fa-redo-alt"></i> Ulangi Ujian
+                    </button>
+                </div>
+            </div>
+
+            <!-- Detailed Review: Accordion / Card structure -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-slate-100 space-y-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-1.5">
+                        <i class="fas fa-list-check text-indigo-600"></i> Pembahasan Soal
+                    </h3>
+                    <p class="text-slate-500 text-xs">Tinjau kembali lembar jawaban Anda di bawah ini.</p>
+                </div>
+
+                <!-- Discussion Items dynamically generated here -->
+                <div id="review-list" class="space-y-4 pt-2">
+                    <!-- Loaded dynamically from script -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 mt-12 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="font-semibold text-slate-300">Aplikasi Ujian Online Pemrograman Web v2.0</p>
+            <p class="mt-1">Dibuat menggunakan HTML5, Tailwind CSS & JavaScript modern</p>
+            <p class="mt-4 text-slate-600">&copy; 2026. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Dialog / Modal Overlay (Replaces alert/confirm) -->
+    <div id="custom-modal" class="hidden fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transform scale-95 transition-transform duration-300 space-y-4">
+            <div class="flex items-center gap-3.5 border-b border-slate-100 pb-3">
+                <div id="modal-icon-container" class="w-10 h-10 rounded-full flex items-center justify-center text-xl">
+                    <i id="modal-icon" class="fas fa-question-circle"></i>
+                </div>
+                <div>
+                    <h4 id="modal-title" class="text-lg font-bold text-slate-900">Konfirmasi Tindakan</h4>
+                    <p id="modal-subtitle" class="text-xs text-slate-400">Pemberitahuan Sistem</p>
+                </div>
+            </div>
+            
+            <p id="modal-message" class="text-sm text-slate-600 leading-relaxed py-2">
+                Apakah Anda yakin ingin melanjutkan tindakan ini?
+            </p>
+
+            <div class="flex gap-2 justify-end pt-2">
+                <button id="modal-btn-cancel" onclick="closeModal(false)" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-lg transition">
+                    Batal
+                </button>
+                <button id="modal-btn-confirm" onclick="closeModal(true)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-lg shadow-sm transition">
+                    Ya, Lanjutkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIDDEN CERTIFICATE PRINT LAYOUT (Designed specifically for window.print() output) -->
+    <div id="certificate-print-area" class="hidden p-8 max-w-[800px] aspect-[1.414/1] bg-white border-[12px] border-double border-indigo-900 m-auto text-center flex flex-col justify-between rounded-sm shadow-xl relative overflow-hidden">
+        <!-- Certificate background watermark accents -->
+        <div class="absolute -top-16 -left-16 w-48 h-48 bg-indigo-50 rounded-full blur-2xl opacity-70 pointer-events-none"></div>
+        <div class="absolute -bottom-16 -right-16 w-48 h-48 bg-indigo-50 rounded-full blur-2xl opacity-70 pointer-events-none"></div>
+
+        <!-- Upper Banner -->
+        <div class="space-y-2 mt-4">
+            <div class="flex justify-center gap-2 items-center mb-1">
+                <i class="fas fa-award text-4xl text-indigo-700"></i>
+            </div>
+            <h1 class="text-2xl font-black text-slate-950 tracking-wider uppercase">Sertifikat Kelulusan</h1>
+            <p class="text-xs text-indigo-800 font-bold uppercase tracking-widest border-y border-indigo-200 py-1 max-w-sm mx-auto">E-Exam Web Programming Academy</p>
+        </div>
+
+        <!-- Participant details -->
+        <div class="space-y-4 my-6">
+            <p class="text-sm text-slate-500 italic">Diberikan secara terhormat kepada:</p>
+            <div class="py-2">
+                <h2 id="cert-nama" class="text-2xl font-extrabold text-indigo-950 underline decoration-indigo-600 decoration-2 underline-offset-8">Muhammad Budi</h2>
+                <p class="text-sm font-mono text-slate-600 mt-2">NIM: <span id="cert-nim">220101034</span> &bull; Kelas: <span id="cert-kelas">IF-3A</span></p>
+            </div>
+            <p class="text-xs text-slate-600 max-w-lg mx-auto leading-relaxed">
+                Atas dedikasi, usaha, dan keberhasilan dalam menyelesaikan Ujian Evaluasi Kompetensi Online materi 
+                <span class="font-bold text-indigo-900">Pemrograman Web Terapan (HTML, CSS, JS, & PHP)</span> dengan hasil penilaian kelulusan yang memuaskan:
+            </p>
+        </div>
+
+        <!-- Score display and date info -->
+        <div class="grid grid-cols-2 gap-8 max-w-md mx-auto items-center border-t border-slate-100 pt-6 mb-6">
+            <div class="text-center">
+                <span class="text-[10px] text-slate-400 block uppercase tracking-wider font-semibold">Skor Pencapaian</span>
+                <span id="cert-score" class="text-3xl font-black text-indigo-600">85%</span>
+            </div>
+            <div class="text-center">
+                <span class="text-[10px] text-slate-400 block uppercase tracking-wider font-semibold">Tanggal Ujian</span>
+                <span id="cert-date" class="text-sm font-bold text-slate-800">22 Mei 2026</span>
+            </div>
+        </div>
+
+        <!-- Signatures & Authority section -->
+        <div class="flex justify-between items-end px-12 mt-4 text-xs">
+            <div class="text-center">
+                <div class="h-10"></div>
+                <div class="w-32 border-b border-slate-400 mx-auto my-1"></div>
+                <p class="font-semibold text-slate-700">Peserta Ujian</p>
+            </div>
+            <div class="text-center flex flex-col items-center">
+                <div class="w-16 h-16 bg-slate-50 border border-slate-200 p-1 flex items-center justify-center">
+                    <!-- Simulated Verification QR Code -->
+                    <div class="grid grid-cols-4 gap-1 w-12 h-12 opacity-80">
+                        <div class="bg-indigo-950"></div><div class="bg-indigo-950"></div><div class="bg-indigo-950"></div><div class="bg-transparent"></div>
+                        <div class="bg-indigo-950"></div><div class="bg-transparent"></div><div class="bg-indigo-950"></div><div class="bg-indigo-950"></div>
+                        <div class="bg-transparent"></div><div class="bg-indigo-950"></div><div class="bg-transparent"></div><div class="bg-indigo-950"></div>
+                        <div class="bg-indigo-950"></div><div class="bg-indigo-950"></div><div class="bg-indigo-950"></div><div class="bg-indigo-950"></div>
+                    </div>
+                </div>
+                <p class="text-[9px] text-slate-400 mt-1 uppercase font-mono tracking-tighter">Digital Verified</p>
+            </div>
+            <div class="text-center">
+                <p class="text-slate-400 text-[10px] mb-8">Yogyakarta, 2026</p>
+                <div class="w-32 border-b border-slate-400 mx-auto my-1"></div>
+                <p class="font-semibold text-slate-700">Panitia Akademik</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT APPLICATION -->
+    <script>
+        
+        // --- DATA JAWABAN & DAFTAR SOAL ---
+        const EXAM_DURATION = 15 * 60; // 15 menit dalam detik
+        const PASSING_GRADE = 70; // KKM Kelulusan
+
+        // Kumpulan Soal Web Programming (15 Soal Pilihan Ganda)
+        const questions = [
+            {
+                id: 1,
+                question: "Tag HTML mana yang digunakan secara khusus untuk membuat hyperlink atau tautan ke halaman lain?",
+                choices: [
+                    { key: "A", text: "&lt;link href=\"...\"&gt;" },
+                    { key: "B", text: "&lt;a href=\"...\"&gt;" },
+                    { key: "C", text: "&lt;hyperlink src=\"...\"&gt;" },
+                    { key: "D", text: "&lt;href&gt;" }
+                ],
+                correct: "B",
+                explanation: "Tag &lt;a&gt; (anchor) digunakan bersama atribut 'href' untuk mendefinisikan hyperlink di HTML."
+            },
+            {
+                id: 2,
+                question: "Dalam sintaks penulisan CSS, selector apakah yang digunakan untuk memilih elemen dengan id tertentu?",
+                choices: [
+                    { key: "A", text: "Titik ( . )" },
+                    { key: "B", text: "Koma ( , )" },
+                    { key: "C", text: "Pagar ( # )" },
+                    { key: "D", text: "Bintang ( * )" }
+                ],
+                correct: "C",
+                explanation: "Selector tanda pagar (#) digunakan untuk menargetkan elemen HTML berdasarkan nilai atribut ID-nya (contoh: #header)."
+            },
+            {
+                id: 3,
+                question: "Bagaimanakah sintaks dasar JavaScript yang benar untuk menuliskan tulisan 'Halo Dunia' langsung ke halaman HTML?",
+                choices: [
+                    { key: "A", text: "document.write(\"Halo Dunia\");" },
+                    { key: "B", text: "print(\"Halo Dunia\");" },
+                    { key: "C", text: "response.write(\"Halo Dunia\");" },
+                    { key: "D", text: "console.log(\"Halo Dunia\");" }
+                ],
+                correct: "A",
+                explanation: "Fungsi document.write() mencetak teks langsung ke dalam dokumen HTML tempat skrip tersebut dieksekusi."
+            },
+            {
+                id: 4,
+                question: "Manakah dari opsi protokol berikut ini yang digunakan untuk mentransfer data halaman web (hypertext) di internet?",
+                choices: [
+                    { key: "A", text: "FTP" },
+                    { key: "B", text: "HTTP / HTTPS" },
+                    { key: "C", text: "SMTP" },
+                    { key: "D", text: "SSH" }
+                ],
+                correct: "B",
+                explanation: "HTTP (Hypertext Transfer Protocol) dan HTTPS (Secure version) adalah protokol dasar untuk komunikasi data di World Wide Web (WWW)."
+            },
+            {
+                id: 5,
+                question: "Apakah kepanjangan yang benar dari istilah CSS dalam dunia pengembangan web?",
+                choices: [
+                    { key: "A", text: "Computer Style Sheets" },
+                    { key: "B", text: "Creative Style Sheets" },
+                    { key: "C", text: "Cascading Style Sheets" },
+                    { key: "D", text: "Colorful Style Sheets" }
+                ],
+                correct: "C",
+                explanation: "CSS adalah singkatan dari Cascading Style Sheets, yang mengatur bagaimana dokumen HTML ditampilkan ke layar visual."
+            },
+            {
+                id: 6,
+                question: "Tag HTML mana yang digunakan untuk mendefinisikan internal CSS atau lembar gaya langsung di dalam dokumen HTML?",
+                choices: [
+                    { key: "A", text: "&lt;css&gt;" },
+                    { key: "B", text: "&lt;script&gt;" },
+                    { key: "C", text: "&lt;style&gt;" },
+                    { key: "D", text: "&lt;stylesheet&gt;" }
+                ],
+                correct: "C",
+                explanation: "Aturan CSS internal diletakkan di dalam blok elemen tag &lt;style&gt; yang biasanya ditempatkan di bagian &lt;head&gt;."
+            },
+            {
+                id: 7,
+                question: "Properti CSS manakah yang digunakan secara spesifik untuk mengubah warna latar belakang sebuah elemen?",
+                choices: [
+                    { key: "A", text: "color" },
+                    { key: "B", text: "background-color" },
+                    { key: "C", text: "bgcolor" },
+                    { key: "D", text: "background-image" }
+                ],
+                correct: "B",
+                explanation: "Properti 'background-color' digunakan di CSS untuk menentukan warna solid pada bagian belakang latar elemen HTML."
+            },
+            {
+                id: 8,
+                question: "Bagaimana cara mendefinisikan atau membuat fungsi baru di dalam bahasa pemrograman JavaScript?",
+                choices: [
+                    { key: "A", text: "function:myFunction()" },
+                    { key: "B", text: "create myFunction()" },
+                    { key: "C", text: "function myFunction()" },
+                    { key: "D", text: "def myFunction()" }
+                ],
+                correct: "C",
+                explanation: "Di JavaScript, pembuatan fungsi diawali dengan kata kunci 'function' diikuti nama fungsi dan tanda kurung parameter."
+            },
+            {
+                id: 9,
+                question: "Bagaimanakah cara menuliskan baris komentar (comment) yang benar di dalam kode CSS?",
+                choices: [
+                    { key: "A", text: "// ini adalah komentar" },
+                    { key: "B", text: "/* ini adalah komentar */" },
+                    { key: "C", text: "&lt;!-- ini adalah komentar --&gt;" },
+                    { key: "D", text: "# ini adalah komentar" }
+                ],
+                correct: "B",
+                explanation: "Komentar di CSS dimulai dengan simbol /* dan diakhiri dengan */. Gaya komentar satu baris // tidak didukung di CSS."
+            },
+            {
+                id: 10,
+                question: "Tag HTML mana yang digunakan untuk membuat daftar atau list yang memiliki urutan teratur (ordered list, contoh: 1, 2, 3)?",
+                choices: [
+                    { key: "A", text: "&lt;ul&gt;" },
+                    { key: "B", text: "&lt;list&gt;" },
+                    { key: "C", text: "&lt;ol&gt;" },
+                    { key: "D", text: "&lt;dl&gt;" }
+                ],
+                correct: "C",
+                explanation: "Tag &lt;ol&gt; digunakan untuk membuat 'Ordered List' yang itemnya otomatis diurutkan secara alfabet atau numerik."
+            },
+            {
+                id: 11,
+                question: "Dalam bahasa pemrograman backend PHP, penulisan variabel wajib dimulai dengan karakter atau simbol apa?",
+                choices: [
+                    { key: "A", text: "Simbol Dan ( &amp; )" },
+                    { key: "B", text: "Simbol Dollar ( $ )" },
+                    { key: "C", text: "Simbol Persen ( % )" },
+                    { key: "D", text: "Simbol Pagar ( # )" }
+                ],
+                correct: "B",
+                explanation: "Di PHP, semua deklarasi atau pemanggilan variabel wajib diawali dengan simbol tanda dolar ($)."
+            },
+            {
+                id: 12,
+                question: "Apakah fungsi utama dari implementasi modul layouting 'Flexbox' pada penataan CSS modern?",
+                choices: [
+                    { key: "A", text: "Mengamankan data transmisi web dari peretas" },
+                    { key: "B", text: "Menghubungkan database MySQL dengan HTML" },
+                    { key: "C", text: "Menata struktur susunan elemen secara fleksibel, rapi, dan responsif" },
+                    { key: "D", text: "Membuat animasi interaktif 3D di browser" }
+                ],
+                correct: "C",
+                explanation: "Flexbox (Flexible Box Layout) dirancang untuk mempermudah pengaturan dan penyelarasan tata letak elemen-elemen web secara dinamis."
+            },
+            {
+                id: 13,
+                question: "Atribut wajib mana yang digunakan untuk mendefinisikan lokasi/sumber file gambar pada tag HTML &lt;img&gt;?",
+                choices: [
+                    { key: "A", text: "href" },
+                    { key: "B", text: "link" },
+                    { key: "C", text: "src" },
+                    { key: "D", text: "source" }
+                ],
+                correct: "C",
+                explanation: "Atribut 'src' (source) digunakan pada tag &lt;img&gt; untuk menunjuk alamat path direktori atau URL dari file gambar."
+            },
+            {
+                id: 14,
+                question: "Manakah dari opsi framework CSS berikut ini yang sangat terkenal dengan pendekatan 'Utility-First Framework'?",
+                choices: [
+                    { key: "A", text: "Bootstrap" },
+                    { key: "B", text: "Tailwind CSS" },
+                    { key: "C", text: "Sass" },
+                    { key: "D", text: "jQuery CSS" }
+                ],
+                correct: "B",
+                explanation: "Tailwind CSS sangat populer karena mengusung konsep 'utility-first', di mana penataan desain dilakukan langsung menggunakan kelas utilitas bawaan."
+            },
+            {
+                id: 15,
+                question: "Saat melakukan request HTTP ke sebuah server web, kode respon status (HTTP Status Code) '404' berarti?",
+                choices: [
+                    { key: "A", text: "Server Error (Kesalahan server)" },
+                    { key: "B", text: "Request OK (Berhasil dimuat)" },
+                    { key: "C", text: "Not Found (Halaman / resource tidak ditemukan)" },
+                    { key: "D", text: "Unauthorized (Akses ditolak)" }
+                ],
+                correct: "C",
+                explanation: "Status Code 404 menandakan bahwa client berhasil terkoneksi ke server, namun halaman atau resource yang dicari tidak ditemukan."
+            }
+        ];
+
+        // --- GLOBAL STATE ---
+        let currentAnswers = {}; // Menyimpan jawaban terpilih user, format: { questionId: "A" }
+        let raguState = {}; // Menyimpan status ragu-ragu user, format: { questionId: true/false }
+        let currentQuestionIndex = 0; // Indeks pertanyaan yang sedang aktif
+        let timerInterval = null; // Handler interval timer
+        let timeLeft = EXAM_DURATION; // Sisa waktu ujian dalam detik
+        let userProfile = { nama: "", nim: "", kelas: "" }; // Menyimpan identitas user
+
+        // Modal Action Queue (gaya callback sederhana untuk konfirmasi dialog)
+        let modalCallback = null;
+
+        
+        // --- CONTROLLER NAVIGASI SCREEN ---
+        function showScreen(screenId) {
+            document.getElementById("screen-reg").classList.add("hidden");
+            document.getElementById("screen-exam").classList.add("hidden");
+            document.getElementById("screen-result").classList.add("hidden");
+            
+            document.getElementById(screenId).classList.remove("hidden");
+
+            // Update Header widget
+            const headerWidget = document.getElementById("header-widget");
+            if (screenId === "screen-exam" || screenId === "screen-result") {
+                headerWidget.classList.remove("hidden");
+                headerWidget.classList.add("flex");
+                document.getElementById("widget-nama").textContent = userProfile.nama;
+                document.getElementById("widget-nim").textContent = userProfile.nim;
+            } else {
+                headerWidget.classList.add("hidden");
+                headerWidget.classList.remove("flex");
+            }
+        }
+
+        // --- SUBMIT PENDAFTARAN ---
+        function handleRegistration(event) {
+            event.preventDefault();
+            
+            // Ambil data inputan form
+            userProfile.nama = document.getElementById("reg-nama").value.trim();
+            userProfile.nim = document.getElementById("reg-nim").value.trim();
+            userProfile.kelas = document.getElementById("reg-kelas").value.trim();
+
+            if (!userProfile.nama || !userProfile.nim || !userProfile.kelas) {
+                openCustomAlert("Harap isi semua kolom pendaftaran dengan benar.");
+                return;
+            }
+
+            // Mulai pengerjaan ujian
+            initExam();
+        }
+
+        // --- INISIALISASI JALANNYA UJIAN ---
+        function initExam() {
+            // Reset status
+            currentAnswers = {};
+            raguState = {};
+            currentQuestionIndex = 0;
+            timeLeft = EXAM_DURATION;
+
+            // Inisialisasi visual
+            renderQuestion();
+            renderNavGrid();
+            updateExamProgressBar();
+
+            // Sembunyikan pendaftaran, tampilkan dashboard ujian
+            showScreen("screen-exam");
+
+            // Jalankan penghitung mundur
+            startTimer();
+        }
+
+        // --- RENDERING SOAL AKTIF ---
+        function renderQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            
+            // Badge & Number update
+            document.getElementById("active-question-badge").textContent = currentQuestionIndex + 1;
+            document.getElementById("total-questions-badge").textContent = questions.length;
+
+            // Judul pertanyaan
+            document.getElementById("question-text").innerHTML = `${currentQuestionIndex + 1}. ${currentQuestion.question}`;
+
+            // Pilihan ganda
+            const choicesContainer = document.getElementById("choices-container");
+            choicesContainer.innerHTML = ""; // Bersihkan pilihan sebelumnya
+
+            currentQuestion.choices.forEach(choice => {
+                const isSelected = currentAnswers[currentQuestion.id] === choice.key;
+                
+                // Card Pembungkus Opsi
+                const choiceCard = document.createElement("button");
+                choiceCard.type = "button";
+                choiceCard.onclick = () => selectChoice(currentQuestion.id, choice.key);
+                
+                // Style dinamis sesuai status pilihan
+                choiceCard.className = `w-full text-left p-4 rounded-xl border-2 transition duration-150 flex items-center gap-4 group focus:outline-none ${
+                    isSelected 
+                    ? 'border-indigo-600 bg-indigo-50/50 shadow-sm' 
+                    : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
+                }`;
+
+                // Desain Abjad Pilihan (A, B, C, D)
+                const badgeClass = isSelected 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'bg-slate-100 text-slate-700 group-hover:bg-slate-200';
+                
+                choiceCard.innerHTML = `
+                    <div class="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm shrink-0 transition ${badgeClass}">
+                        ${choice.key}
+                    </div>
+                    <div class="text-sm sm:text-base text-slate-800 font-medium leading-relaxed">
+                        ${choice.text}
+                    </div>
+                    <div class="ml-auto shrink-0 flex items-center justify-center">
+                        <div class="w-5 h-5 rounded-full border-2 ${isSelected ? 'border-indigo-600 bg-indigo-600 flex items-center justify-center' : 'border-slate-300'}">
+                            ${isSelected ? '<i class="fas fa-check text-[10px] text-white"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+
+                choicesContainer.appendChild(choiceCard);
+            });
+
+            // Update status checkbox ragu-ragu
+            const btnRagu = document.getElementById("btn-ragu");
+            if (raguState[currentQuestion.id]) {
+                btnRagu.className = "flex-1 sm:flex-initial bg-amber-600 text-white font-bold py-2.5 px-4 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm shadow-md ring-2 ring-amber-300";
+            } else {
+                btnRagu.className = "flex-1 sm:flex-initial bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-4 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm shadow-sm";
+            }
+
+            // Atur status tombol Sebelumnya & Berikutnya
+            document.getElementById("btn-prev").disabled = currentQuestionIndex === 0;
+            document.getElementById("btn-prev").style.opacity = currentQuestionIndex === 0 ? "0.5" : "1";
+            
+            const btnNext = document.getElementById("btn-next");
+            if (currentQuestionIndex === questions.length - 1) {
+                btnNext.innerHTML = `Selesai <i class="fas fa-check-double"></i>`;
+                btnNext.className = "flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm";
+                btnNext.onclick = confirmSubmitExam;
+            } else {
+                btnNext.innerHTML = `Berikutnya <i class="fas fa-arrow-right"></i>`;
+                btnNext.className = "flex-1 sm:flex-initial bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-4 rounded-lg transition duration-150 flex items-center justify-center gap-2 text-sm";
+                btnNext.onclick = () => navigateQuestion(1);
+            }
+        }
+
+        // --- EVENT SELECT JAWABAN ---
+        function selectChoice(questionId, choiceKey) {
+            currentAnswers[questionId] = choiceKey;
+            renderQuestion();
+            renderNavGrid();
+            updateExamProgressBar();
+        }
+
+        // --- TOGGLE STATUS RAGU-RAGU ---
+        function toggleRagu() {
+            const currentQuestion = questions[currentQuestionIndex];
+            raguState[currentQuestion.id] = !raguState[currentQuestion.id];
+            renderQuestion();
+            renderNavGrid();
+        }
+
+        // --- NAVIGASI KE SOAL LAIN ---
+        function navigateQuestion(direction) {
+            const nextIndex = currentQuestionIndex + direction;
+            if (nextIndex >= 0 && nextIndex < questions.length) {
+                currentQuestionIndex = nextIndex;
+                renderQuestion();
+                renderNavGrid();
+            }
+        }
+
+        function jumpToQuestion(index) {
+            currentQuestionIndex = index;
+            renderQuestion();
+            renderNavGrid();
+        }
+
+        // --- PROGRESS BAR UPDATE ---
+        function updateExamProgressBar() {
+            const answeredCount = Object.keys(currentAnswers).length;
+            const percentage = (answeredCount / questions.length) * 100;
+            document.getElementById("exam-progress-bar").style.width = `${percentage}%`;
+        }
+
+        // --- RENDER NOMOR NAVIGASI ---
+        function renderNavGrid() {
+            const navContainer = document.getElementById("nav-grid-container");
+            navContainer.innerHTML = "";
+
+            questions.forEach((q, idx) => {
+                const btnNav = document.createElement("button");
+                btnNav.type = "button";
+                btnNav.onclick = () => jumpToQuestion(idx);
+
+                const isCurrent = idx === currentQuestionIndex;
+                const isAnswered = currentAnswers[q.id] !== undefined;
+                const isRagu = raguState[q.id] === true;
+
+                // Hitung background & border classes
+                let styleClass = "";
+                if (isCurrent) {
+                    styleClass = "bg-indigo-600 text-white ring-2 ring-offset-2 ring-indigo-500 font-extrabold shadow";
+                } else if (isRagu) {
+                    styleClass = "bg-amber-500 text-white font-bold hover:bg-amber-600";
+                } else if (isAnswered) {
+                    styleClass = "bg-emerald-100 text-emerald-800 border-2 border-emerald-300 font-semibold hover:bg-emerald-200";
+                } else {
+                    styleClass = "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
+                }
+
+                btnNav.className = `w-full aspect-square text-xs font-semibold rounded-lg flex items-center justify-center transition focus:outline-none ${styleClass}`;
+                btnNav.textContent = idx + 1;
+
+                navContainer.appendChild(btnNav);
+            });
+        }
+
+        
+        // --- TIMER HANDLER ---
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmitExam();
+                } else {
+                    timeLeft--;
+                    displayTimer();
+                }
+            }, 1000);
+        }
+
+        function displayTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            const text = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById("timer-text").textContent = text;
+        }
+
+        // --- AUTOMATIC TIME EXPIRED SUBMIT ---
+        function autoSubmitExam() {
+            clearInterval(timerInterval);
+            openCustomAlert("Waktu ujian Anda telah habis! Sistem akan mengumpulkan lembar jawaban Anda sekarang.", () => {
+                processEvaluation();
+            });
+        }
+
+        // --- CONFIRMATION MODAL TO SUBMIT ---
+        function confirmSubmitExam() {
+            const totalAnswered = Object.keys(currentAnswers).length;
+            const totalQuestions = questions.length;
+            const remaining = totalQuestions - totalAnswered;
+
+            let message = "Apakah Anda yakin ingin menyelesaikan ujian ini sekarang?";
+            if (remaining > 0) {
+                message = `Peringatan: Masih ada <b>${remaining} soal belum terjawab</b>. Apakah Anda yakin ingin mengumpulkan jawaban sekarang?`;
+            }
+
+            openCustomConfirm(
+                message,
+                "Konfirmasi Pengumpulan",
+                "fas fa-exclamation-triangle text-amber-500 bg-amber-50",
+                () => {
+                    clearInterval(timerInterval);
+                    processEvaluation();
+                }
+            );
+        }
+
+        // --- MEMPROSES SKOR DAN EVALUASI HASIL ---
+        function processEvaluation() {
+            let correctCount = 0;
+            let incorrectCount = 0;
+            let unansweredCount = 0;
+
+            questions.forEach(q => {
+                const userAnswer = currentAnswers[q.id];
+                if (userAnswer === undefined) {
+                    unansweredCount++;
+                } else if (userAnswer === q.correct) {
+                    correctCount++;
+                } else {
+                    incorrectCount++;
+                }
+            });
+
+            const rawScore = (correctCount / questions.length) * 100;
+            const score = Math.round(rawScore); // Dibulatkan ke bilangan bulat terdekat
+
+            // Tampilkan Screen Result
+            showScreen("screen-result");
+
+            // Update Teks Identitas
+            document.getElementById("res-nama").textContent = userProfile.nama;
+            document.getElementById("res-nim").textContent = userProfile.nim;
+            document.getElementById("res-kelas").textContent = userProfile.kelas;
+
+            // Update Statistik Angka
+            document.getElementById("stat-benar").textContent = correctCount;
+            document.getElementById("stat-salah").textContent = incorrectCount;
+            document.getElementById("stat-kosong").textContent = unansweredCount;
+            document.getElementById("score-number").textContent = score;
+
+            // Jalankan Animasi Ring Progress SVG
+            const strokeDashOffset = 389.5 - (389.5 * score) / 100;
+            const scoreRing = document.getElementById("score-ring");
+            scoreRing.style.strokeDashoffset = strokeDashOffset;
+
+            // Atur status kelulusan berdasarkan KKM
+            const isPassed = score >= PASSING_GRADE;
+            const badgeKelulusan = document.getElementById("badge-kelulusan");
+            const btnCertificate = document.getElementById("btn-print-certificate");
+
+            if (isPassed) {
+                badgeKelulusan.textContent = "LULUS UJIAN";
+                badgeKelulusan.className = "mt-4 px-4 py-1.5 rounded-full font-bold text-sm tracking-wide shadow-sm bg-emerald-100 text-emerald-800 border border-emerald-300";
+                btnCertificate.classList.remove("hidden"); // Tunjukkan tombol cetak sertifikat
+            } else {
+                badgeKelulusan.textContent = "TIDAK LULUS";
+                badgeKelulusan.className = "mt-4 px-4 py-1.5 rounded-full font-bold text-sm tracking-wide shadow-sm bg-rose-100 text-rose-800 border border-rose-300";
+                btnCertificate.classList.add("hidden"); // Sembunyikan tombol cetak sertifikat
+            }
+
+            // Update Sertifikat Cetak Data
+            document.getElementById("cert-nama").textContent = userProfile.nama;
+            document.getElementById("cert-nim").textContent = userProfile.nim;
+            document.getElementById("cert-kelas").textContent = userProfile.kelas;
+            document.getElementById("cert-score").textContent = `${score}%`;
+            
+            // Format Tanggal Hari Ini
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('id-ID', options);
+            document.getElementById("cert-date").textContent = today;
+
+            // Generate Pembahasan Soal Detailed Review
+            generateDetailedReview();
+        }
+
+        // --- GENERATE DETAILED REVIEW DAN PEMBAHASAN ---
+        function generateDetailedReview() {
+            const reviewList = document.getElementById("review-list");
+            reviewList.innerHTML = ""; // Reset
+
+            questions.forEach((q, idx) => {
+                const userAnswer = currentAnswers[q.id];
+                const isCorrect = userAnswer === q.correct;
+                const isUnanswered = userAnswer === undefined;
+
+                // Ambil string teks jawaban pengguna & kunci jawaban
+                let userAnsText = "- (Kosong)";
+                if (!isUnanswered) {
+                    const choiceObj = q.choices.find(c => c.key === userAnswer);
+                    userAnsText = `Opsi (${choiceObj.key}) &mdash; ${choiceObj.text}`;
+                }
+
+                const correctChoiceObj = q.choices.find(c => c.key === q.correct);
+                const correctAnsText = `Opsi (${correctChoiceObj.key}) &mdash; ${correctChoiceObj.text}`;
+
+                // Buat Elemen Pembungkus List Soal Pembahasan
+                const block = document.createElement("div");
+                block.className = `p-5 rounded-xl border-l-4 shadow-sm transition-all duration-300 ${
+                    isCorrect 
+                    ? 'bg-emerald-50/50 border-emerald-500 border-slate-100' 
+                    : isUnanswered 
+                        ? 'bg-slate-50/70 border-slate-400 border-slate-200'
+                        : 'bg-rose-50/40 border-rose-500 border-slate-100'
+                } border`;
+
+                // Badge Status Soal
+                let statusBadge = "";
+                if (isCorrect) {
+                    statusBadge = `<span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded uppercase tracking-wider"><i class="fas fa-check"></i> Benar</span>`;
+                } else if (isUnanswered) {
+                    statusBadge = `<span class="px-2 py-0.5 bg-slate-200 text-slate-700 text-[10px] font-bold rounded uppercase tracking-wider"><i class="fas fa-minus"></i> Kosong</span>`;
+                } else {
+                    statusBadge = `<span class="px-2 py-0.5 bg-rose-100 text-rose-800 text-[10px] font-bold rounded uppercase tracking-wider"><i class="fas fa-times"></i> Salah</span>`;
+                }
+
+                block.innerHTML = `
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-bold text-xs text-slate-500">SOAL NOMOR ${idx + 1}</span>
+                        ${statusBadge}
+                    </div>
+                    
+                    <h4 class="font-bold text-slate-800 text-sm leading-relaxed mb-3">
+                        ${q.question}
+                    </h4>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-start gap-1.5">
+                            <span class="font-semibold text-slate-500 w-28 shrink-0">Jawaban Anda:</span>
+                            <span class="${isCorrect ? 'text-emerald-700 font-medium' : isUnanswered ? 'text-slate-500 italic' : 'text-rose-700 font-medium'}">${userAnsText}</span>
+                        </div>
+                        <div class="flex items-start gap-1.5">
+                            <span class="font-semibold text-slate-500 w-28 shrink-0">Kunci Jawaban:</span>
+                            <span class="text-indigo-800 font-semibold">${correctAnsText}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-t border-slate-200/50">
+                        <p class="text-[11px] text-indigo-950 leading-relaxed font-normal italic flex items-start gap-1.5">
+                            <i class="fas fa-info-circle mt-0.5 text-indigo-600 shrink-0"></i>
+                            <span><b>Penjelasan:</b> ${q.explanation}</span>
+                        </p>
+                    </div>
+                `;
+
+                reviewList.appendChild(block);
+            });
+        }
+
+        
+        // --- PRINT CETAK SERTIFIKAT ---
+        function printCertificate() {
+            const certArea = document.getElementById("certificate-print-area");
+            
+            // Tampilkan sementara wadah sertifikat agar terdeteksi printer
+            certArea.classList.remove("hidden");
+            
+            // Panggil system printer
+            window.print();
+            
+            // Sembunyikan kembali wadah sertifikat setelah proses cetak
+            certArea.classList.add("hidden");
+        }
+
+        // --- RESTART UJIAN ---
+        function restartExam() {
+            openCustomConfirm(
+                "Apakah Anda yakin ingin memulai ulang ujian? Semua riwayat skor saat ini akan dihapus.",
+                "Ulangi Ujian",
+                "fas fa-redo-alt text-indigo-500 bg-indigo-50",
+                () => {
+                    initExam();
+                }
+            );
+        }
+
+        // --- CUSTOM MODAL HANDLER (NO ALERTS BROWSER) ---
+        function openCustomAlert(message, callback = null) {
+            const modal = document.getElementById("custom-modal");
+            const modalIconContainer = document.getElementById("modal-icon-container");
+            const modalIcon = document.getElementById("modal-icon");
+            const btnCancel = document.getElementById("modal-btn-cancel");
+            
+            document.getElementById("modal-title").textContent = "Pemberitahuan";
+            document.getElementById("modal-subtitle").textContent = "Informasi Sistem";
+            document.getElementById("modal-message").innerHTML = message;
+
+            modalIconContainer.className = "w-10 h-10 rounded-full flex items-center justify-center text-xl bg-indigo-50 text-indigo-600";
+            modalIcon.className = "fas fa-info-circle";
+
+            btnCancel.classList.add("hidden"); // Hanya ada tombol konfirmasi 'Ya'
+            
+            modalCallback = callback;
+            modal.classList.remove("hidden");
+        }
+
+        function openCustomConfirm(message, title, iconThemeClass, callback) {
+            const modal = document.getElementById("custom-modal");
+            const modalIconContainer = document.getElementById("modal-icon-container");
+            const modalIcon = document.getElementById("modal-icon");
+            const btnCancel = document.getElementById("modal-btn-cancel");
+            
+            document.getElementById("modal-title").textContent = title;
+            document.getElementById("modal-subtitle").textContent = "Konfirmasi Tindakan";
+            document.getElementById("modal-message").innerHTML = message;
+
+            modalIconContainer.className = `w-10 h-10 rounded-full flex items-center justify-center text-xl ${iconThemeClass}`;
+            
+            // Pilih icon yang cocok
+            if (iconThemeClass.includes("amber")) {
+                modalIcon.className = "fas fa-exclamation-triangle";
+            } else {
+                modalIcon.className = "fas fa-question-circle";
+            }
+
+            btnCancel.classList.remove("hidden"); // Munculkan tombol 'Batal'
+            
+            modalCallback = callback;
+            modal.classList.remove("hidden");
+        }
+
+        function closeModal(isConfirmed) {
+            document.getElementById("custom-modal").classList.add("hidden");
+            if (isConfirmed && typeof modalCallback === "function") {
+                modalCallback();
+            }
+            modalCallback = null; // Clear callback
+        }
+
+        // Jalankan event listeners pengamanan saat memuat window
+        window.onload = function () {
+            // Membuka pendaftaran pada awal load program
+            showScreen("screen-reg");
+        }
+    </script>
+</body>
+</html>
